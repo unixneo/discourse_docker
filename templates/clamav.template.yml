@@ -1,0 +1,17 @@
+run:
+  - exec:
+      cmd:
+        - apt-get update && apt-get install -y clamav clamav-daemon
+        - freshclam
+  - file:
+     path: /etc/service/clamdscan/run
+     chmod: "+x"
+     contents: |
+        #!/bin/sh
+        exec thpoff chpst /etc/init.d/clamav-daemon start
+  - file:
+     path: /etc/cron.d/clamav-update
+     contents: |
+        * *    * * *   root /usr/bin/freshclam
+
+
